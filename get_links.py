@@ -37,29 +37,14 @@ class console:
 log = console()
 log.clear()
 r = requests.get(log.input("Enter Fitgirl Game Link : "))
+r.raise_for_status()  # fail fast on HTTP errors instead of silently parsing a bad response
 
 soup = BeautifulSoup(r.text, "html.parser")
 
-text_span = soup.find(
-    "span",
-    string=lambda s: s and "REALLY Fucking Fast" in s
-)
-
-if not text_span:
-    log.error("Text Not Found", "REALLY Fucking Fast")
-    sys.exit()
-
-spoiler = text_span.find_next(
-    "div",
-    class_="su-spoiler"
-)
-
-if not spoiler:
-    log.error("Spoiler Container Not Found", "su-spoiler")
-    sys.exit()
-
+# each filehoster has its own dlinks div; find_all catches all of them
 links = [
     a["href"]
+    for spoiler in soup.find_all("div", class_="dlinks")
     for a in spoiler.find_all("a", href=True)
     if a["href"].startswith("https://fuckingfast.co/")
 ]
