@@ -1,4 +1,5 @@
 import os, re, requests
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 from datetime import datetime
@@ -84,11 +85,13 @@ with open('input.txt', 'r') as file:
 
 if not links:
     log.warning("input.txt is empty", "add links and rerun")
-    raise SystemExit(0)
+    raise SystemExit(1)
 
-game_name = links[0].split("#")[-1].split("--")[0].strip("_")
+fragment = urlparse(links[0]).fragment
+game_name = fragment.split("--")[0].strip("_") if fragment else "unknown_game"
 downloads_folder = os.path.join("downloads", game_name)
 os.makedirs(downloads_folder, exist_ok=True)
+log.info("Download folder", downloads_folder)
 
 for link in links:
     log.info(f"Started Processing", f"{link[:30]}...{link[60:]}")
