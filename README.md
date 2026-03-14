@@ -6,7 +6,7 @@ This Tool Helps To Download Multiple Files Easily From fitgirl-repacks.site Thro
 
 Ensure you have the following installed before running the script :
 
-- Python 3.8+
+`Python 3.8+`
 
 ```bash
 pip install -r requirements.txt
